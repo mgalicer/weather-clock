@@ -1,8 +1,11 @@
 
 
 #include <SPI.h>
-#include <WiFi101.h>
+#include "WiFi101.h"
 #include "keys.h"
+#include "ArduinoJson.h"
+
+// using json = nlohmann::json;
 
 char ssid[] = "Human Condition Global 2.4GHz"; //  your network SSID (name)
 char pass[] = WIFI_PASS;    // your network password (use for WPA, or use as key for WEP)
@@ -12,8 +15,9 @@ int status = WL_IDLE_STATUS;
 // if you don't want to use DNS (and reduce your sketch size)
 // use the numeric IP instead of the name for the server:
 //IPAddress server(74,125,232,128);  // numeric IP for Google (no DNS)
-char server[] = "http://api.wunderground.com";
+char server[] = "api.wunderground.com";
 
+char c;
 // Initialize the Ethernet client library
 // with the IP address and port of the server
 // that you want to connect to (port 80 is default for HTTP):
@@ -51,8 +55,8 @@ void setup() {
   if (client.connect(server, 80)) {
     Serial.println("connected to server");
     // Make a HTTP request:
-    client.println("GET //api/" + String(WEATHER_KEY) + "/conditions/q/40.7055211,-73.9394487.json");
-    client.println("Host: http://api.wunderground.com");
+    client.println("GET /api/" + String(WEATHER_KEY) + "/forecast/q/40.7055211,-73.9394487.json HTTP/1.1");
+    client.println("Host: api.wunderground.com");
     client.println("Connection: close");
     client.println();
   }
@@ -61,8 +65,22 @@ void setup() {
 void loop() {
   // if there are incoming bytes available
   // from the server, read them and print them:
-  while (client.available()) {
-    char c = client.read();
+  // uint8_t json[1000];
+  // for(int i=0; i < 1000; i++) {
+  //   json[i] = 50;
+  // }
+
+  // while (client.available()) {  
+    // client.read(json, 1000);
+    // StaticJsonBuffer<10000000000> jsonBuffer;
+    // JsonObject& httpRes = jsonBuffer.parseObject(c);
+    // const char* temp = httpRes["hourly"];
+    // Serial.println(client.available());
+    
+  // }
+
+  while(client.available()) {
+    c = client.read();
     Serial.write(c);
   }
 
@@ -73,8 +91,8 @@ void loop() {
     client.stop();
 
     // do nothing forevermore:
-    while (true);
   }
+    while (true);
 }
 
 
