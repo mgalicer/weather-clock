@@ -15,7 +15,7 @@ int status = WL_IDLE_STATUS;
 // if you don't want to use DNS (and reduce your sketch size)
 // use the numeric IP instead of the name for the server:
 //IPAddress server(74,125,232,128);  // numeric IP for Google (no DNS)
-char server[] = "api.wunderground.com";
+char server[] = "weatherclockserver.herokuapp.com";
 
 char c;
 // Initialize the Ethernet client library
@@ -55,8 +55,8 @@ void setup() {
   if (client.connect(server, 80)) {
     Serial.println("connected to server");
     // Make a HTTP request:
-    client.println("GET /api/" + String(WEATHER_KEY) + "/forecast/q/40.7055211,-73.9394487.json HTTP/1.1");
-    client.println("Host: api.wunderground.com");
+    client.println("GET /weather HTTP/1.1");
+    client.println("Host: weatherclockserver.herokuapp.com");
     client.println("Connection: close");
     client.println();
   }
@@ -70,19 +70,20 @@ void loop() {
   //   json[i] = 50;
   // }
 
-  // while (client.available()) {  
+  // while (client.available()) {
     // client.read(json, 1000);
     // StaticJsonBuffer<10000000000> jsonBuffer;
     // JsonObject& httpRes = jsonBuffer.parseObject(c);
     // const char* temp = httpRes["hourly"];
     // Serial.println(client.available());
-    
+
   // }
 
   while(client.available()) {
     c = client.read();
     Serial.write(c);
   }
+
 
   // if the server's disconnected, stop the client:
   if (!client.connected()) {
@@ -91,8 +92,9 @@ void loop() {
     client.stop();
 
     // do nothing forevermore:
+     while (true);
   }
-    while (true);
+
 }
 
 
