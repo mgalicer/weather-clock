@@ -7,7 +7,7 @@
 
 // using json = nlohmann::json;
 
-char ssid[] = "Human Condition Global 2.4GHz"; //  your network SSID (name)
+char ssid[] = WIFI_NAME; //  your network SSID (name)
 char pass[] = WIFI_PASS;    // your network password (use for WPA, or use as key for WEP)
 int keyIndex = 0;            // your network key Index number (needed only for WEP)
 
@@ -17,7 +17,12 @@ int status = WL_IDLE_STATUS;
 //IPAddress server(74,125,232,128);  // numeric IP for Google (no DNS)
 char server[] = "weatherclockserver.herokuapp.com";
 
+
+StaticJsonBuffer<600> jsonBuffer;
 char c;
+int i = 0;
+char charArr[600];
+char json[600];
 // Initialize the Ethernet client library
 // with the IP address and port of the server
 // that you want to connect to (port 80 is default for HTTP):
@@ -78,13 +83,19 @@ void loop() {
     // Serial.println(client.available());
 
   // }
-
   while(client.available()) {
     c = client.read();
-    Serial.write(c);
+    charArr[i] = c;
+    i++;
   }
 
+  // for(byte x = 0; x < sizeof(c); x++){
+  //   json[x] = c[x];
+  // }
 
+  JsonObject& root = jsonBuffer.parseObject(charArr);
+
+  Serial.write(root);
   // if the server's disconnected, stop the client:
   if (!client.connected()) {
     Serial.println();
