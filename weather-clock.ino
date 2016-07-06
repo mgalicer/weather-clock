@@ -83,21 +83,24 @@ void loop() {
     // Serial.println(client.available());
 
   // }
-  while(client.available()) {
-    c = client.read();
-    Serial.println(c);
-    charArr[i] = c;
-    i++;
-  }
-
   // for(byte x = 0; x < sizeof(c); x++){
   //   json[x] = c[x];
   // }
 
+
+  while(client.available()) {
+    c = client.read();
+    Serial.write(c);
+    charArr[i] = c;
+    i++;
+  }
+
+
+
   JsonObject& root = jsonBuffer.parseObject(charArr);
-  char target[600];
-  root.printTo(target, root.measureLength() + 1);
-  Serial.println(target);
+  // char target[600];
+  // root.printTo(target, root.measureLength() + 1);
+  // Serial.println(target);
 
   // if the server's disconnected, stop the client:
   if (!client.connected()) {
