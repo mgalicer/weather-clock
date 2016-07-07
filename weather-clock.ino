@@ -4,6 +4,10 @@
 #include "WiFi101.h"
 #include "keys.h"
 #include "ArduinoJson.h"
+#include <Adafruit_NeoPixel.h>
+#ifdef __AVR__
+  #include <avr/power.h>
+#endif
 
 // using json = nlohmann::json;
 
