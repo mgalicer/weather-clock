@@ -9,7 +9,10 @@
   #include <avr/power.h>
 #endif
 
-// using json = nlohmann::json;
+#define PIN 6
+
+// initializes the ring with arguments(number of pixels, input pin, type of pixels)
+Adafruit_NeoPixel pixels = Adafruit_NeoPixel(24, PIN, NEO_GRB + NEO_KHZ800);
 
 char ssid[] = WIFI_NAME; //  your network SSID (name)
 char pass[] = WIFI_PASS;    // your network password (use for WPA, or use as key for WEP)
@@ -33,6 +36,8 @@ char json[600];
 WiFiClient client;
 
 void setup() {
+  pixels.begin(); // This initializes the NeoPixel library.
+
   //Initialize serial and wait for port to open:
   Serial.begin(9600);
   while (!Serial) {
@@ -72,24 +77,8 @@ void setup() {
 }
 
 void loop() {
-  // if there are incoming bytes available
-  // from the server, read them and print them:
-  // uint8_t json[1000];
-  // for(int i=0; i < 1000; i++) {
-  //   json[i] = 50;
-  // }
-
-  // while (client.available()) {
-    // client.read(json, 1000);
-    // StaticJsonBuffer<10000000000> jsonBuffer;
-    // JsonObject& httpRes = jsonBuffer.parseObject(c);
-    // const char* temp = httpRes["hourly"];
-    // Serial.println(client.available());
-
-  // }
-  // for(byte x = 0; x < sizeof(c); x++){
-  //   json[x] = c[x];
-  // }
+  pixels.setPixelColor(0, 245,51,255);
+  pixels.show();
 
 
   while(client.available()) {
