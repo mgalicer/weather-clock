@@ -1,5 +1,3 @@
-
-
 #include <SPI.h>
 #include "WiFi101.h"
 #include "keys.h"
@@ -28,12 +26,17 @@ char server[] = "weatherclockserver.herokuapp.com";
 StaticJsonBuffer<600> jsonBuffer;
 char c;
 int i = 0;
-char charArr[600];
+String response = "";
 char json[600];
 // Initialize the Ethernet client library
 // with the IP address and port of the server
 // that you want to connect to (port 80 is default for HTTP):
 WiFiClient client;
+
+void setLEDColor(temp) {
+  // if temp is under 60 degrees, find the difference from 60 and multiply that by 4.25 to find the G value (B stays at 255)
+  // if the temperature is above 60 degrees, increase the G value by 5 (R stays at 255)
+}
 
 void setup() {
   pixels.begin(); // This initializes the NeoPixel library.
@@ -78,19 +81,20 @@ void setup() {
 
 void loop() {
   pixels.setPixelColor(0, 245,51,255);
+  pixels.setPixelColor(1, 255,0,0);
   pixels.show();
 
 
   while(client.available()) {
     c = client.read();
-    Serial.write(c);
-    charArr[i] = c;
+    // Serial.write(c);
+    response += c;
+    Serial.println(response);
     i++;
   }
 
 
-
-  JsonObject& root = jsonBuffer.parseObject(charArr);
+  // JsonObject& root = jsonBuffer.parseObject(charArr);
   // char target[600];
   // root.printTo(target, root.measureLength() + 1);
   // Serial.println(target);
