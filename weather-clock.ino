@@ -27,6 +27,7 @@ StaticJsonBuffer<600> jsonBuffer;
 char c;
 int i = 0;
 String response = "";
+String placeholder = "";
 char json[600];
 // Initialize the Ethernet client library
 // with the IP address and port of the server
@@ -60,7 +61,7 @@ void setup() {
     Serial.println(ssid);
     // Connect to WPA/WPA2 network. Change this line if using open or WEP network:
     status = WiFi.begin(ssid, pass);
-
+    Serial.print("here");
     // wait 10 seconds for connection:
     delay(10000);
   }
@@ -87,26 +88,28 @@ void loop() {
     response += c;
   }
 
-  // Serial.println(response.charAt(0));
+  // String placeholder = String(10) += ",";
+  // Serial.println(response.indexOf(placeholder));
+  // Serial.println(response.charAt(305));
 
   for(int hour = 1; hour <= 12; hour++) {
-    String placeholder = String(hour) += ",";
-    Serial.println(response.indexOf(placeholder));
-    // get index of temperature
-    // assign temperature to variable
-    // get index of percept precipitation
-    // send both temperature and precipation to a method that assigns LED a color
-    assignLedColor(temperature, percentPrecip)
+    if(hour < 10) {
+      placeholder = "0" + String(hour) += ",";
+    } else {
+      placeholder = String(hour) += ",";
+    }
+
+    int startTemp = response.indexOf(placeholder) + 3;
+    int endTemp = startTemp + 3;
+
+    int temp = response.substring(startTemp, endTemp).toInt();
+
+    int startPrecip = endTemp;
+    int endPrecip = ;
+
+
+    // assignLedColor(temperature, percentPrecip)
   }
-
-    // Serial.println(response);
-  // Serial.write(response)
-
-
-  // JsonObject& root = jsonBuffer.parseObject(charArr);
-  // char target[600];
-  // root.printTo(target, root.measureLength() + 1);
-  // Serial.println(target);
 
   pixels.show();
   // if the server's disconnected, stop the client:
