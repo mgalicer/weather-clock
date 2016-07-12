@@ -104,9 +104,10 @@ void loop() {
 
     int temp = response.substring(startTemp, endTemp).toInt();
 
-    int startPrecip = endTemp;
-    int endPrecip = ;
+    int startPrecip = endTemp + 2;
+    int endPrecip = startPrecip + 3;
 
+    int precip = response.substring(startPrecip, endPrecip).toInt();
 
     // assignLedColor(temperature, percentPrecip)
   }
