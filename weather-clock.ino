@@ -33,10 +33,10 @@ char json[600];
 // that you want to connect to (port 80 is default for HTTP):
 WiFiClient client;
 
-void setLEDColor(temp) {
+// void setLEDColor(temp) {
   // if temp is under 60 degrees, find the difference from 60 and multiply that by 4.25 to find the G value (B stays at 255)
   // if the temperature is above 60 degrees, increase the G value by 5 (R stays at 255)
-}
+// }
 
 void setup() {
   pixels.begin(); // This initializes the NeoPixel library.
@@ -80,18 +80,27 @@ void setup() {
 }
 
 void loop() {
-  pixels.setPixelColor(0, 245,51,255);
-  pixels.setPixelColor(1, 255,0,0);
-  pixels.show();
-
+  while(!client.available()) {};
 
   while(client.available()) {
     c = client.read();
-    // Serial.write(c);
     response += c;
-    Serial.println(response);
-    i++;
   }
+
+  // Serial.println(response.charAt(0));
+
+  for(int hour = 1; hour <= 12; hour++) {
+    String placeholder = String(hour) += ",";
+    Serial.println(response.indexOf(placeholder));
+    // get index of temperature
+    // assign temperature to variable
+    // get index of percept precipitation
+    // send both temperature and precipation to a method that assigns LED a color
+    assignLedColor(temperature, percentPrecip)
+  }
+
+    // Serial.println(response);
+  // Serial.write(response)
 
 
   // JsonObject& root = jsonBuffer.parseObject(charArr);
@@ -99,6 +108,7 @@ void loop() {
   // root.printTo(target, root.measureLength() + 1);
   // Serial.println(target);
 
+  pixels.show();
   // if the server's disconnected, stop the client:
   if (!client.connected()) {
     Serial.println();
