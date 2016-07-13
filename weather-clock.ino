@@ -88,9 +88,6 @@ void loop() {
     response += c;
   }
 
-  // String placeholder = String(10) += ",";
-  // Serial.println(response.indexOf(placeholder));
-  // Serial.println(response.charAt(305));
 
   for(int hour = 1; hour <= 12; hour++) {
     if(hour < 10) {
@@ -104,15 +101,16 @@ void loop() {
 
     int temp = response.substring(startTemp, endTemp).toInt();
 
-    int startPrecip = endTemp + 2;
+    int startPrecip = endTemp + 1;
     int endPrecip = startPrecip + 3;
 
     int precip = response.substring(startPrecip, endPrecip).toInt();
-
-    // assignLedColor(temperature, percentPrecip)
+    Serial.print(hour);
+    Serial.print(temp);
+    Serial.print(precip);
+    assignLedColor(hour, temp, precip)
   }
 
-  pixels.show();
   // if the server's disconnected, stop the client:
   if (!client.connected()) {
     Serial.println();
@@ -124,6 +122,15 @@ void loop() {
   }
 
 }
+
+void assignLedColor(hour, temp, precip) {
+  int red = 0;
+  int green = 0;
+  int blue = 0;
+
+  pixels.show();
+}
+
 
 
 void printWifiStatus() {
