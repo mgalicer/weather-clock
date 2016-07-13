@@ -17,11 +17,8 @@ char pass[] = WIFI_PASS;    // your network password (use for WPA, or use as key
 int keyIndex = 0;            // your network key Index number (needed only for WEP)
 
 int status = WL_IDLE_STATUS;
-// if you don't want to use DNS (and reduce your sketch size)
-// use the numeric IP instead of the name for the server:
-//IPAddress server(74,125,232,128);  // numeric IP for Google (no DNS)
-char server[] = "weatherclockserver.herokuapp.com";
 
+char server[] = "weatherclockserver.herokuapp.com";
 
 StaticJsonBuffer<600> jsonBuffer;
 char c;
@@ -29,15 +26,9 @@ int i = 0;
 String response = "";
 String placeholder = "";
 char json[600];
-// Initialize the Ethernet client library
-// with the IP address and port of the server
-// that you want to connect to (port 80 is default for HTTP):
+
 WiFiClient client;
 
-// void setLEDColor(temp) {
-  // if temp is under 60 degrees, find the difference from 60 and multiply that by 4.25 to find the G value (B stays at 255)
-  // if the temperature is above 60 degrees, increase the G value by 5 (R stays at 255)
-// }
 
 void setup() {
   pixels.begin(); // This initializes the NeoPixel library.
@@ -88,7 +79,6 @@ void loop() {
     response += c;
   }
 
-
   for(int hour = 1; hour <= 12; hour++) {
     if(hour < 10) {
       placeholder = "0" + String(hour) += ",";
@@ -114,13 +104,11 @@ void loop() {
     assignLedColor(hour, temp, precip);
   }
 
-  // if the server's disconnected, stop the client:
   if (!client.connected()) {
     Serial.println();
     Serial.println("disconnecting from server.");
     client.stop();
 
-    // do nothing forevermore:
      while (true);
   }
 
