@@ -109,6 +109,8 @@ void loop() {
     Serial.print(temp);
     Serial.print(precip);
 
+    if(hour == 12) {hour = 0;};
+
     assignLedColor(hour, temp, precip);
   }
 
@@ -125,7 +127,7 @@ void loop() {
 }
 
 void assignLedColor(int hour, int temp, int precip) {
-  if(temp > 0 && temp < 60) {
+  if(temp >= 0 && temp < 60) {
     pixels.setPixelColor(hour * 2, 0, temp * 4, 255);
     pixels.setPixelColor(hour * 2 + 1, 0, temp * 4, 255);
   } else if (temp > 60 && temp < 110) {
