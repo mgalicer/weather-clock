@@ -41,7 +41,7 @@ WiFiClient client;
 
 void setup() {
   pixels.begin(); // This initializes the NeoPixel library.
-
+  pixels.setBrightness(60);
   //Initialize serial and wait for port to open:
   Serial.begin(9600);
   while (!Serial) {
@@ -108,7 +108,8 @@ void loop() {
     Serial.print(hour);
     Serial.print(temp);
     Serial.print(precip);
-    assignLedColor(hour, temp, precip)
+
+    assignLedColor(hour, temp, precip);
   }
 
   // if the server's disconnected, stop the client:
@@ -123,10 +124,14 @@ void loop() {
 
 }
 
-void assignLedColor(hour, temp, precip) {
-  int red = 0;
-  int green = 0;
-  int blue = 0;
+void assignLedColor(int hour, int temp, int precip) {
+  if(temp > 0 && temp < 60) {
+    pixels.setPixelColor(hour * 2, 0, temp * 4, 255);
+    pixels.setPixelColor(hour * 2 + 1, 0, temp * 4, 255);
+  } else if (temp > 60 && temp < 110) {
+    pixels.setPixelColor(hour * 2, 255, 255 - temp * 5, 0);
+    pixels.setPixelColor(hour * 2 + 1, 255, 255 - temp * 5, 0);
+  }
 
   pixels.show();
 }
