@@ -18,7 +18,7 @@ int keyIndex = 0;            // your network key Index number (needed only for W
 
 int status = WL_IDLE_STATUS;
 
-char server[] = "weatherclockserver.herokuapp.com";
+const char server[] = "weatherclockserver.herokuapp.com";
 
 StaticJsonBuffer<600> jsonBuffer;
 char c;
@@ -26,9 +26,9 @@ int i = 0;
 String response = "";
 String placeholder = "";
 char json[600];
+unsigned long time = 0;
 
 WiFiClient client;
-
 
 void setup() {
   pixels.begin(); // This initializes the NeoPixel library.
@@ -59,6 +59,56 @@ void setup() {
   Serial.println("Connected to wifi");
   printWifiStatus();
 
+}
+
+void loop() {
+  if((millis() > time + 60000) || (time == 0)) {
+    if(status = WL_CONNECTED) {
+      httpRequest();
+      time = millis();
+    }
+
+    while(!client.available()) {};
+
+    while(client.available()) {
+      c = client.read();
+      response += c;
+    }
+
+    for(int hour = 0; hour <= 11; hour++) {
+      if(hour < 10) {
+        placeholder = "0" + String(hour) += ",";
+      } else {
+        placeholder = String(hour) += ",";
+      }
+
+      int startTemp = response.indexOf(placeholder) + 3;
+      int endTemp = startTemp + 3;
+
+      int temp = response.substring(startTemp, endTemp).toInt();
+
+      int startPrecip = endTemp + 1;
+      int endPrecip = startPrecip + 3;
+
+      int precip = response.substring(startPrecip, endPrecip).toInt();
+      Serial.print(hour);
+      Serial.print(temp);
+      Serial.print(precip);
+
+      assignLedColor(hour, temp, precip);
+    }
+
+    if (!client.connected()) {
+      Serial.println();
+      Serial.println("disconnecting from server.");
+      client.stop();
+
+       while (true);
+    }
+  }
+}
+
+void httpRequest() {
   Serial.println("\nStarting connection to server...");
   // if you get a connection, report back via serial:
   if (client.connect(server, 80)) {
@@ -69,49 +119,6 @@ void setup() {
     client.println("Connection: close");
     client.println();
   }
-}
-
-void loop() {
-  while(!client.available()) {};
-
-  while(client.available()) {
-    c = client.read();
-    response += c;
-  }
-
-  for(int hour = 1; hour <= 12; hour++) {
-    if(hour < 10) {
-      placeholder = "0" + String(hour) += ",";
-    } else {
-      placeholder = String(hour) += ",";
-    }
-
-    int startTemp = response.indexOf(placeholder) + 3;
-    int endTemp = startTemp + 3;
-
-    int temp = response.substring(startTemp, endTemp).toInt();
-
-    int startPrecip = endTemp + 1;
-    int endPrecip = startPrecip + 3;
-
-    int precip = response.substring(startPrecip, endPrecip).toInt();
-    Serial.print(hour);
-    Serial.print(temp);
-    Serial.print(precip);
-
-    if(hour == 12) {hour = 0;};
-
-    assignLedColor(hour, temp, precip);
-  }
-
-  if (!client.connected()) {
-    Serial.println();
-    Serial.println("disconnecting from server.");
-    client.stop();
-
-     while (true);
-  }
-
 }
 
 void assignLedColor(int hour, int temp, int precip) {
